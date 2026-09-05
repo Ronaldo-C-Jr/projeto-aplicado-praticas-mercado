@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!--
+    [OWASP A02 - Security Misconfiguration]
+    Mitigação: Política de Segurança de Conteúdo (CSP) restritiva.
+    - default-src 'self': restringe carregamento apenas à mesma origem.
+    - script-src 'self': proíbe scripts inline e fontes externas não autorizadas.
+    - style-src 'self': restringe estilos apenas à mesma origem (sem CDNs ou unsafe-inline).
+    - img-src 'self' data:: permite apenas imagens locais ou data URIs.
+    - object-src 'none': bloqueia plugins legados (Flash, Java applets).
+    - base-uri 'self': previne ataques de base-tag injection.
+    - form-action 'self': restringe submissão de formulários à própria origem.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';">
+  
+  <!-- Proteções adicionais de cabeçalhos via meta tags -->
+  <meta name="referrer" content="no-referrer">
+  
+  <title>Login Seguro - Práticas de Mercado</title>
+  
+  <!-- [OWASP A02] Estilos 100% locais, sem dependência de fontes externas ou CDNs -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="auth-container">
+    <div class="card">
+      <header class="card-header">
+        <span class="badge">Autenticação Segura</span>
+        <h1>Acesso ao Sistema</h1>
+        <p>Informe suas credenciais para acessar o painel protegido</p>
+      </header>
+
+      <!--
+        [OWASP A05 - Injection/XSS]
+        Container de alertas para exibição controlada de mensagens.
+        O conteúdo deste elemento é manipulado estritamente via textContent no app.js.
+      -->
+      <div id="authAlert" class="alert" role="alert" aria-live="assertive"></div>
+
+      <!-- Formulário de autenticação -->
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="form-group">
+          <label for="username">Usuário</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input" 
+            placeholder="Digite seu usuário" 
+            required 
+            maxlength="50"
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="Digite sua senha" 
+            required 
+            maxlength="100"
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" id="btnLogin" class="btn btn-primary">
+          Entrar
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- [OWASP A02] Script local carregado de forma segura -->
+  <script src="app.js"></script>
+</body>
+</html>

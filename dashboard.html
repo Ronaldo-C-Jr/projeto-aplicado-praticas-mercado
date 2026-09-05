@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    [OWASP A02 - Security Misconfiguration]
+    Mitigação: Política de Segurança de Conteúdo (CSP) restritiva no painel protegido.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta name="referrer" content="no-referrer">
+
+  <title>Painel Seguro - Dashboard</title>
+  
+  <!-- [OWASP A02] Estilos locais exclusivos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <!-- Cabeçalho do Dashboard -->
+    <header class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>Painel de Controle Seguro</h1>
+        <p>Área restrita e protegida por autenticação criptográfica</p>
+      </div>
+      
+      <!--
+        [OWASP A07 - Authentication Failures]
+        Botão de logout que destrói a sessão ativa em sessionStorage e redireciona ao login.
+      -->
+      <button id="btnLogout" class="btn btn-danger" type="button">
+        Encerrar Sessão (Logout)
+      </button>
+    </header>
+
+    <!-- Indicadores da Sessão Ativa -->
+    <section class="dashboard-grid" aria-label="Informações da Sessão">
+      <article class="stat-card">
+        <h3>Status da Sessão</h3>
+        <div>
+          <span class="badge-status">Autenticado com Sucesso</span>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <h3>Usuário Logado</h3>
+        <!-- [OWASP A05] Dado preenchido estritamente via textContent no app.js -->
+        <div id="userNameDisplay" class="value">Carregando...</div>
+      </article>
+
+      <article class="stat-card">
+        <h3>Hora do Login</h3>
+        <!-- [OWASP A05] Dado preenchido estritamente via textContent no app.js -->
+        <div id="loginTimeDisplay" class="value">--:--:--</div>
+      </article>
+
+      <article class="stat-card" style="grid-column: 1 / -1;">
+        <h3>Token de Sessão (Criptograficamente Seguro)</h3>
+        <!-- [OWASP A05] Dado preenchido estritamente via textContent no app.js -->
+        <div id="tokenDisplay" class="value" style="font-size: 0.9rem;">Gerando...</div>
+      </article>
+    </section>
+
+    <!-- Resumo de Mitigações de Segurança Aplicadas -->
+    <section class="security-audit-card">
+      <h2>Matriz de Segurança Implementada (OWASP)</h2>
+      <ul class="audit-list">
+        <li class="audit-item">
+          <span class="audit-tag">OWASP A07</span>
+          <div class="audit-desc">
+            <strong>Falhas de Identificação e Autenticação:</strong> Sessão isolada em <code>sessionStorage</code>, token criptográfico efêmero, proteção anti-brute force (bloqueio temporário após 4 falhas) e hashing irreversível de senha com SHA-256 via <code>crypto.subtle</code>.
+          </div>
+        </li>
+        <li class="audit-item">
+          <span class="audit-tag">OWASP A05</span>
+          <div class="audit-desc">
+            <strong>Injeção & XSS:</strong> Sanitização defensiva de dados recebidos, manipulação do DOM estritamente através de <code>textContent</code> (proibição total de <code>innerHTML</code>) e eliminação completa de <code>eval()</code>.
+          </div>
+        </li>
+        <li class="audit-item">
+          <span class="audit-tag">OWASP A02</span>
+          <div class="audit-desc">
+            <strong>Configuração Incorreta de Segurança:</strong> <code>Content-Security-Policy</code> restritiva declarada via <code>&lt;meta&gt;</code>, desabilitação de plugins obsoletos e ausência total de dependências ou requisições para fontes externas.
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- [OWASP A02] Script principal unificado -->
+  <script src="app.js"></script>
+</body>
+</html>
